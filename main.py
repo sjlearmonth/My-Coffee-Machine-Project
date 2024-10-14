@@ -20,7 +20,8 @@ def serve_user(selection):
     money_inserted = calculate_money_inserted()
     cost_of_coffee = MENU[selection]['cost']
     money_in_coffee_machine += money_inserted
-    change_back = money_inserted - cost_of_coffee
+    change_back = round(money_inserted - cost_of_coffee, 2)
+    print(f'change back is {change_back}')
     return change_back
 
 def check_and_update_stock_levels(selection):
@@ -67,17 +68,22 @@ while coffee_machine_is_ON:
 
                 if change < 0.0:
 
-                    while change < 0.00:
+                    while change < 0.0:
+                        
+
                         print(f"You haven't inserted enough coins.")
                         print(f'Please insert another ${-change:,.2f}.')
                         money_inserted = calculate_money_inserted()
+                        print(f'Money inserted is {money_inserted}')
                         change += money_inserted
+                        print(f'Change is {change}')
 
                     print(f"Thank you, you have now inserted enough coins for your {user_selection}.")
                     print(f"Here is your {user_selection}, enjoy!")
 
                     if change > 0.0:
                         print(f"Here is ${change:,.2f} in change.")
+                        money_in_coffee_machine -= change
 
                 else:
                     print(f"Thank you, you have now inserted enough coins for your {user_selection}.")
