@@ -12,7 +12,7 @@ def calculate_money_inserted():
     dimes = int(input("How many dimes?: "))
     nickles = int(input("How many nickles?: "))
     pennies = int(input("How many pennies?: "))
-    money_inserted = (quarters * 25 + dimes * 10 + nickles * 5 + pennies)/100.0
+    money_inserted = (quarters * 25 + dimes * 10 + nickles * 5 + pennies) / 100.0
     return round(money_inserted, 2)
 
 def serve_user(selection):
@@ -46,17 +46,32 @@ def check_and_update_stock_levels(selection):
 
 money_in_coffee_machine = 0
 coffee_machine_is_ON = True
+selection_stock_levels = {'espresso' : {'water': True, 'milk' : True, 'coffee' : True},
+                          'latte' : {'water': True, 'milk' : True, 'coffee' : True},
+                          'cappuccino' : {'water' : True, 'milk' : True, 'coffee' : True}
+                          }
 
 def report_low_stock_level(status):
+
     global coffee_machine_is_ON
+    global selection_stock_levels
+
     if status == "not_enough_water_left":
         print(f"Coffee machine does not have enough water left to serve you a {user_selection}.")
+        print("Please try another selection.")
+        selection_stock_levels[user_selection]['water'] = False
+        return
     elif status == "not_enough_milk_left":
         print(f"Coffee machine does not have enough milk left to serve you a {user_selection}.")
+        print("Please try another selection.")
+        selection_stock_levels[user_selection]['milk'] = False
+        return
     else:
         print(f"Coffee machine does not have enough coffee left to serve you a {user_selection}.")
-    print("Coffee machine has been switched off. Goodbye.")
-    coffee_machine_is_ON = False
+        print("Please try another selection.")
+        selection_stock_levels[user_selection]['coffee'] = False
+        return
+
     return
 
 while coffee_machine_is_ON:
@@ -103,5 +118,7 @@ while coffee_machine_is_ON:
 
         else:
             report_low_stock_level(machine_status)
+            if selection_stock_levels[]
     else:
         print("Error. You have entered an invalid selection.")
+        print("Please try again.")
