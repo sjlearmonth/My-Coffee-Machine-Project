@@ -20,8 +20,7 @@ def serve_user(selection):
     money_inserted = calculate_money_inserted()
     cost_of_coffee = MENU[selection]['cost']
     money_in_coffee_machine += money_inserted
-    change_back = round(money_inserted - cost_of_coffee, 2)
-    print(f'change back is {change_back}')
+    change_back = money_inserted - cost_of_coffee
     return change_back
 
 def check_and_update_stock_levels(selection):
@@ -47,7 +46,18 @@ def check_and_update_stock_levels(selection):
 
 money_in_coffee_machine = 0
 coffee_machine_is_ON = True
-change = 0.0
+
+def report_low_stock_level(status):
+    global coffee_machine_is_ON
+    if status == "not_enough_water_left":
+        print(f"Coffee machine does not have enough water left to serve you a {user_selection}.")
+    elif status == "not_enough_milk_left":
+        print(f"Coffee machine does not have enough milk left to serve you a {user_selection}.")
+    else:
+        print(f"Coffee machine does not have enough coffee left to serve you a {user_selection}.")
+    print("Coffee machine has been switched off. Goodbye.")
+    coffee_machine_is_ON = False
+    return
 
 while coffee_machine_is_ON:
 
@@ -64,40 +74,34 @@ while coffee_machine_is_ON:
 
         if machine_status == 'coffee_machine_operational':
 
-                change = serve_user(user_selection)
+                change = round(serve_user(user_selection), 2)
 
                 if change < 0.0:
 
                     while change < 0.0:
-                        
 
                         print(f"You haven't inserted enough coins.")
                         print(f'Please insert another ${-change:,.2f}.')
                         money_inserted = calculate_money_inserted()
-                        print(f'Money inserted is {money_inserted}')
+                        money_in_coffee_machine += money_inserted
                         change += money_inserted
-                        print(f'Change is {change}')
+                        change = round(change, 2)
 
                     print(f"Thank you, you have now inserted enough coins for your {user_selection}.")
                     print(f"Here is your {user_selection}, enjoy!")
 
                     if change > 0.0:
-                        print(f"Here is ${change:,.2f} in change.")
+                        print(f"Here is ${change} in change.")
                         money_in_coffee_machine -= change
 
                 else:
                     print(f"Thank you, you have now inserted enough coins for your {user_selection}.")
                     print(f"Here is your {user_selection}, enjoy!")
                     if change > 0.0:
-                        print(f"Here is ${change:,.2f} in change.")
+                        print(f"Here is ${change} in change.")
                         money_in_coffee_machine -= change
 
         else:
-            if machine_status == "not_enough_water_left":
-                print(f"Coffee machine does not have enough water left to serve you a {user_selection}.")
-            elif machine_status == "not_enough_milk_left":
-                print(f"Coffee machine does not have enough milk left to serve you a {user_selection}.")
-            else:
-                print(f"Coffee machine does not have enough coffee left to serve you a {user_selection}.")
+            report_low_stock_level(machine_status)
     else:
         print("Error. You have entered an invalid selection.")
