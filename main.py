@@ -106,13 +106,13 @@ while coffee_machine_is_ON:
                     print(f"Thank you, you have now inserted enough coins for your {user_selection}.")
                     print(f"Here is your {user_selection}, enjoy!")
                     if change > 0.0:
-                        print(f"Here is ${change} in change.")
+                        print(f"Here is ${change:,.2f} in change.")
                         money_in_coffee_machine -= change
 
         else:
 
             report_low_stock_level(machine_status)
-            
+
             if not (ingredients_available['espresso'] or
                     ingredients_available['latte'] or
                     ingredients_available['cappuccino']):
