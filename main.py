@@ -46,33 +46,26 @@ def check_and_update_stock_levels(selection):
 
 money_in_coffee_machine = 0
 coffee_machine_is_ON = True
-selection_stock_levels = {'espresso' : {'water': True, 'milk' : True, 'coffee' : True},
-                          'latte' : {'water': True, 'milk' : True, 'coffee' : True},
-                          'cappuccino' : {'water' : True, 'milk' : True, 'coffee' : True}
-                          }
+ingredients_available = {'espresso' : True, 'latte' : True, 'cappuccino' : True}
 
 def report_low_stock_level(status):
 
     global coffee_machine_is_ON
-    global selection_stock_levels
+    global ingredients_available
 
     if status == "not_enough_water_left":
         print(f"Coffee machine does not have enough water left to serve you a {user_selection}.")
         print("Please try another selection.")
-        selection_stock_levels[user_selection]['water'] = False
-        return
+
     elif status == "not_enough_milk_left":
         print(f"Coffee machine does not have enough milk left to serve you a {user_selection}.")
         print("Please try another selection.")
-        selection_stock_levels[user_selection]['milk'] = False
-        return
+
     else:
         print(f"Coffee machine does not have enough coffee left to serve you a {user_selection}.")
         print("Please try another selection.")
-        selection_stock_levels[user_selection]['coffee'] = False
-        return
 
-    return
+    ingredients_available[user_selection] = False
 
 while coffee_machine_is_ON:
 
@@ -106,7 +99,7 @@ while coffee_machine_is_ON:
                     print(f"Here is your {user_selection}, enjoy!")
 
                     if change > 0.0:
-                        print(f"Here is ${change} in change.")
+                        print(f"Here is ${change:,.2f} in change.")
                         money_in_coffee_machine -= change
 
                 else:
@@ -117,8 +110,15 @@ while coffee_machine_is_ON:
                         money_in_coffee_machine -= change
 
         else:
+
             report_low_stock_level(machine_status)
-            if selection_stock_levels[]
+            
+            if not (ingredients_available['espresso'] or
+                    ingredients_available['latte'] or
+                    ingredients_available['cappuccino']):
+                print("Sorry, unable to serve any coffee at this time due to low stock levels.")
+                print("Please come back again when the coffee machine has been re-stocked.")
+                coffee_machine_is_ON = False
     else:
         print("Error. You have entered an invalid selection.")
-        print("Please try again.")
+        print("Please try again. Goodbye.")
