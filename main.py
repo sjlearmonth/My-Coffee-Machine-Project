@@ -24,24 +24,23 @@ def serve_user(selection):
     return change_back
 
 def check_and_update_stock_levels(selection):
-    if resources['water'] < MENU[selection]['ingredients']['water']:
-        return 'not_enough_water_left'
-    else:
-        resources['water'] -= MENU[selection]['ingredients']['water']
-
-    try:
-        if resources['milk'] < MENU[selection]['ingredients']['milk']:
-            return 'not_enough_milk_left'
+    coffee_ingredients = MENU[selection]['ingredients']
+    for ingredient in coffee_ingredients:
+        if ingredient == 'water':
+            if resources['water'] < coffee_ingredients[ingredient]:
+                return 'not_enough_water_left'
+            else:
+                resources['water'] -= coffee_ingredients[ingredient]
+        elif ingredient == 'milk':
+            if resources['milk'] < coffee_ingredients[ingredient]:
+                return 'not_enough_milk_left'
+            else:
+                resources['milk'] -= coffee_ingredients[ingredient]
         else:
-            resources['milk'] -= MENU[selection]['ingredients']['milk']
-    except KeyError:
-        pass
-
-    if resources['coffee'] < MENU[selection]['ingredients']['coffee']:
-        return 'not_enough_coffee_left'
-    else:
-        resources['coffee'] -= MENU[selection]['ingredients']['coffee']
-
+            if resources['coffee'] < coffee_ingredients['coffee']:
+                return 'not_enough_coffee_left'
+            else:
+                resources['coffee'] -= coffee_ingredients['coffee']
     return 'coffee_machine_operational'
 
 money_in_coffee_machine = 0
@@ -52,18 +51,19 @@ def report_low_stock_level(status):
 
     global coffee_machine_is_ON
     global ingredients_available
+    start_of_ingredient = 11
+    end_of_ingredient = len(status) - 5
 
-    if status == "not_enough_water_left":
-        print(f"Coffee machine does not have enough water left to serve you a {user_selection}.")
-        print("Please try another selection.")
-
-    elif status == "not_enough_milk_left":
-        print(f"Coffee machine does not have enough milk left to serve you a {user_selection}.")
-        print("Please try another selection.")
-
+    ingredient = status[start_of_ingredient:end_of_ingredient]
+    user_message = f"Coffee machine does not have enough {ingredient} left to serve you "
+    if user_selection == 'espresso':
+        user_message += "an "
     else:
-        print(f"Coffee machine does not have enough coffee left to serve you a {user_selection}.")
-        print("Please try another selection.")
+        user_message += "a "
+    user_message += user_selection
+    print(user_message)
+
+    print("Please try another selection.")
 
     ingredients_available[user_selection] = False
 
